@@ -72,13 +72,14 @@
 		        captchaKey = respon.key;
 		        // 캡차 이미지를 가져오는 API 엔드포인트의 URL
 		        var captchaImageUrl = "/api/captcha/image?key=" + captchaKey;
-
+		        
 		        // 이미지를 생성하여 삽입합니다.
 		        var captchaImage = $("<img>").attr("src", captchaImageUrl);
 		        // 캡차 이미지를 출력할 위치에 삽입합니다.
 		        $("#captchaImageContainer").html(captchaImage);
 		    });
 
+		
 		    // "Login" 버튼 클릭 이벤트 핸들러
 		    $("#signIn").on("click", function(event) {
 		        event.preventDefault();
@@ -105,7 +106,6 @@
 		            }
 		        });
 		    });
-		});
 
 		// 로그인 처리 함수
 		function processLogin() {
@@ -146,6 +146,7 @@
 		        }
 		    });
 		}
+		});
 
 		// 회원가입 화면 이동
 		$(function() {
