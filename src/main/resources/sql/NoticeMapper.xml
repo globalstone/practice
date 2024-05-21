@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="NoticeMapper">
+
+	<resultMap type="notice" id="noticeSelectMap">
+        <result property="noticeNo" column="notice_no" jdbcType="NUMERIC"/>
+        <result property="noticeName" column="notice_name" jdbcType="VARCHAR"/>
+        <result property="noticeSubject" column="notice_subject" jdbcType="VARCHAR"/>
+        <result property="noticeContent" column="notice_content" jdbcType="CLOB"/>
+        <result property="noticePwd" column="notice_pwd" jdbcType="NUMERIC"/>
+        <result property="noticeRegDate" column="notice_regdate" jdbcType="DATE"/>
+    </resultMap>
+	
+	<sql id="select-list">
+        SELECT
+        notice_no, notice_name, notice_subject,
+        notice_content,notice_pwd, notice_regdate,
+        ROW_NUMBER() OVER (ORDER BY notice_no) AS row_seq
+        FROM notice
+    </sql>
+    
+	<!-- 작성 -->
+	<insert id="insertNotice" parameterType="Notice">
+		INSERT
+        INTO notice
+        VALUES (seq_notice_notice_no.NEXTVAL, #{noticeName}, #{noticeSubject},
+                #{noticeContent}, #{noticePwd},SYSDATE)
+	</insert>
+	
+	<!-- 상세보기  -->
+	<select id="detailNotice" resultType="Notice" resultMap="noticeSelectMap">
+		SELECT
+            notice_no, notice_content, notice_subject, notice_regdate
+        FROM notice
+        WHERE notice_no = #{noticeNo}
+	</select>
+	
+	<!--  목록조회  -->
+    <select id="getNoticeList" parameterType="search" resultMap="noticeSelectMap">
+		SELECT *
+        FROM (
+        SELECT inner_table.*
+        FROM (
+        <include refid="select-list"/>
+        ) inner_table
+        WHERE inner_table.row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+        )
+	</select>
+	
+	<!-- 수정 -->
+	<update id="updateNotice" parameterType="Notice">
+		UPDATE notice
+        <set>
+            notice_content = #{noticeContent},
+            notice_subject = #{noticeSubject}
+        </set>
+        WHERE notice_no= #{noticeNo}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="int">
+		DELETE FROM notice
+		WHERE notice_no=#{noticeNo}
+	</delete>
+	
+	<select id="getPwdNotice" resultType="string" parameterType="int">
+		SELECT notice_pwd FROM notice
+		WHERE notice_no=#{noticeNo}
+	</select>
+	
+	<select id="getTotalCount" parameterType="search" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+        <include refid="select-list"/>
+        ) countTable
+
+    </select>
+	
+</mapper>
