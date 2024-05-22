@@ -76,8 +76,8 @@ public class NoticeDaoImpl implements NoticeDao {
 	}
 	
 	@Override
-	public void deleteNotice(Notice notice) throws Exception {
-		sqlSession.delete("NoticeMapper.deleteNotice",notice);
+	public Notice deleteNotice(int noticeNo) throws Exception {
+		return (Notice)sqlSession.selectOne("NoticeMapper.deleteNotice",noticeNo);
 	}
 	
 	@Override

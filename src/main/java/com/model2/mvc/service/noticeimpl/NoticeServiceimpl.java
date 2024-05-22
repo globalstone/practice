@@ -50,8 +50,8 @@ public class NoticeServiceimpl implements NoticeService{
 	//===================
 
 	@Override
-	public void delNotice(Notice notice) throws Exception {
-		noticeDao.deleteNotice(notice);
+	public Notice delNotice(int noticeNo) throws Exception {
+		return noticeDao.deleteNotice(noticeNo);
 	}
 	
 	@Override

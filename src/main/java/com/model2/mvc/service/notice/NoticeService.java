@@ -15,7 +15,7 @@ public interface NoticeService {
 	
 	public void updateNotice(Notice notice) throws Exception;
 	
-	public void delNotice(Notice notice) throws Exception;
+	public Notice delNotice(int noticeNo) throws Exception;
 	
 	public String getPwd(int noticeNo,String noticePwd) throws Exception;
 }

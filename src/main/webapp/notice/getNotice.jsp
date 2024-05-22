@@ -96,6 +96,6 @@
 </table>
 </form>
 <button style="float: right;" id="수정" onclick="event.preventDefault(); location.href='/notice/updateNotice/${noti.noticeNo}'">수정</button>
-
+<button style="float: right;" id="삭제" onclick="event.preventDefault(); location.href='/notice/delete/${noti.noticeNo}'">삭제</button>
 </body>
 </html>

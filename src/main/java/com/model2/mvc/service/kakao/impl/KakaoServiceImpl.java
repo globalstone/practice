@@ -44,7 +44,7 @@ public class KakaoServiceImpl implements KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=cec50764919801119a69066d40036533");  //본인이 발급받은 key
-            sb.append("&redirect_uri=https://ncbitcamp.shop/kakao/login&response_type=code");     // 본인이 설정해 놓은 경로
+            sb.append("&redirect_uri=http://localhost:8080/kakao/login&response_type=code");     // 본인이 설정해 놓은 경로
             sb.append("&code=" + authorize_code);
             System.out.println("authorize_code : " + authorize_code);
             bw.write(sb.toString());
@@ -118,14 +118,16 @@ public class KakaoServiceImpl implements KakaoService {
 
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-
-
+            String kakaoId = element.getAsJsonObject().get("id").getAsString();
+            
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
             String kphone = kakao_account.getAsJsonObject().get("phone_number").getAsString();
 
 
 
+            userInfo.put("id", kakaoId);
+            System.out.println("kakaoId ============ " + kakaoId);
             userInfo.put("nickname", nickname);
             userInfo.put("email", email);
             userInfo.put("kphone",kphone);

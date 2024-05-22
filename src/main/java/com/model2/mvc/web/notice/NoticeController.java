@@ -76,7 +76,7 @@ public class NoticeController {
 					
 					noticeService.addNotice(notice);
 
-					return "forward:/notice/addNotice.jsp";
+					return "redirect:/notice/list";
 		}
 		
 		@GetMapping(value = "addNotice")
@@ -117,4 +117,12 @@ public class NoticeController {
 			return "forward:/notice/updateNotice.jsp";
 		}
 		
+		@GetMapping(value = "delete/{noticeNo}")
+		public String deleteNotice(@PathVariable int noticeNo,
+									Model model) throws Exception {
+			System.out.println("deleteNotice start......");
+			Notice notice = noticeService.delNotice(noticeNo);
+		
+			return "redirect:/notice/list";
+		}
 }

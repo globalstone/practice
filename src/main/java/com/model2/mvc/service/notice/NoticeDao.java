@@ -15,7 +15,7 @@ public interface NoticeDao {
 	
 	public void updateNotice(Notice notice) throws Exception;
 	
-	public void deleteNotice(Notice notice) throws Exception;
+	public Notice deleteNotice(int noticeNo) throws Exception;
 	
 	public int getTotalCount(Search search) throws Exception;
 	

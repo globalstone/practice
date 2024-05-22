@@ -61,9 +61,9 @@
         WHERE notice_no= #{noticeNo}
 	</update>
 	
-	<delete id="deleteNotice" parameterType="int">
+	<delete id="deleteNotice" parameterType="Notice">
 		DELETE FROM notice
-		WHERE notice_no=#{noticeNo}
+		WHERE notice_no = #{noticeNo}
 	</delete>
 	
 	<select id="getPwdNotice" resultType="string" parameterType="int">
