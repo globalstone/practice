@@ -62,100 +62,96 @@
 			});
 		});
 		$(document).ready(function() {
-		    // 캡차 이미지 키를 저장할 전역 변수
 		    var captchaKey;
+		    loadCaptcha();
 
-		    // 페이지가 로드되면 캡차 이미지를 가져와서 표시합니다.
-		    $.get("/api/captcha/nkey?code=0", function(response) {
-		        // 응답에서 캡차 이미지 키를 가져옵니다.
-		        var respon = JSON.parse(response);
-		        captchaKey = respon.key;
-		        // 캡차 이미지를 가져오는 API 엔드포인트의 URL
-		        var captchaImageUrl = "/api/captcha/image?key=" + captchaKey;
-		        
-		        // 이미지를 생성하여 삽입합니다.
-		        var captchaImage = $("<img>").attr("src", captchaImageUrl);
-		        // 캡차 이미지를 출력할 위치에 삽입합니다.
-		        $("#captchaImageContainer").html(captchaImage);
-		    });
-
-		
-		    // "Login" 버튼 클릭 이벤트 핸들러
 		    $("#signIn").on("click", function(event) {
 		        event.preventDefault();
+		        verifyCaptcha();
+		    });
+
+		    function loadCaptcha() {
+		        $.get("/api/captcha/nkey?code=0", function(response) {
+		            var respon = JSON.parse(response);
+		            captchaKey = respon.key;
+		            var captchaImageUrl = "/api/captcha/image?key=" + captchaKey;
+		            var captchaImage = $("<img>").attr("src", captchaImageUrl);
+		            $("#captchaImageContainer").html(captchaImage);
+		        });
+		    }
+
+		    function verifyCaptcha() {
 		        var captchaValue = $("input[name='captcha']").val();
 
-		        // 서버로 로그인 요청을 보냅니다.
 		        $.ajax({
 		            url: "/api/captcha/verify",
 		            method: "GET",
 		            data: {
-		                key: captchaKey, // 이전에 받은 캡차 키
-		                value: captchaValue // 사용자가 입력한 캡차 값
+		                key: captchaKey,
+		                value: captchaValue
 		            },
 		            success: function(response) {
-		                // 캡차 검증에 성공했을 때의 처리
-		                console.log("캡차 검증 성공:", response);
-		                // 여기에 로그인 요청을 보내는 코드를 추가할 수 있습니다.
-		                processLogin(); // 로그인 함수 호출
+		                var result = JSON.parse(response);
+		                if (result.result) { // assuming the API returns {"result":true} on success
+		                    processLogin();
+		                } else {
+		                    alert("캡차를 다시 확인해주세요.");
+		                    loadCaptcha(); // Load new captcha
+		                }
 		            },
 		            error: function(xhr, status, error) {
-		                // 캡차 검증에 실패했을 때의 처리
 		                console.error("캡차 검증 실패:", error);
 		                alert("캡차를 다시 확인해주세요.");
+		                loadCaptcha(); // Load new captcha
 		            }
 		        });
-		    });
-
-		// 로그인 처리 함수
-		function processLogin() {
-		    var id = $("input:text").val();
-		    var pw = $("input:password").val();
-
-		    if (id == null || id.length < 1) {
-		        alert('ID 를 입력하지 않으셨습니다.');
-		        $("input:text").focus();
-		        return;
 		    }
 
-		    if (pw == null || pw.length < 1) {
-		        alert('패스워드를 입력하지 않으셨습니다.');
-		        $("input:password").focus();
-		        return;
-		    }
+		    function processLogin() {
+		        var id = $("input:text").val();
+		        var pw = $("input:password").val();
 
-		    $.ajax({
-		        url: "/user/json/login",
-		        method: "POST",
-		        dataType: "json",
-		        headers: {
-		            "Accept": "application/json",
-		            "Content-Type": "application/json"
-		        },
-		        data: JSON.stringify({
-		            userId: id,
-		            password: pw
-		        }),
-		        success: function(JSONData, status) {
-		            if (JSONData != null) {
-		                //[방법1]
-		                $(window.parent.document.location).attr("href", "/index.jsp");
-		            } else {
-		                alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
-		            }
+		        if (id == null || id.length < 1) {
+		            alert('ID 를 입력하지 않으셨습니다.');
+		            $("input:text").focus();
+		            return;
 		        }
-		    });
-		}
+
+		        if (pw == null || pw.length < 1) {
+		            alert('패스워드를 입력하지 않으셨습니다.');
+		            $("input:password").focus();
+		            return;
+		        }
+
+		        $.ajax({
+		            url: "/user/json/login",
+		            method: "POST",
+		            dataType: "json",
+		            headers: {
+		                "Accept": "application/json",
+		                "Content-Type": "application/json"
+		            },
+		            data: JSON.stringify({
+		                userId: id,
+		                password: pw
+		            }),
+		            success: function(JSONData, status) {
+		                if (JSONData != null) {
+		                    $(window.parent.document.location).attr("href", "/index.jsp");
+		                } else {
+		                    alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
+		                }
+		            }
+		        });
+		    }
 		});
 
-		// 회원가입 화면 이동
 		$(function() {
 		    $("#signUp").on("click", function(event) {
 		        event.preventDefault();
 		        self.location = "/user/addUser";
 		    });
 		});
-
 	</script>	
 	
 </head>
@@ -230,6 +226,7 @@
 			  		<div id="captchaImageContainer">
     						<!-- 캡차 이미지가 표시될 곳 -->
 					</div>
+					<input class="form-control me-sm-2 mt-2" type="text" name="captcha" placeholder="Enter Captcha">
 			  		<%@ include file="/layout/footer.jsp" %>
 			  	</div>
 			  		

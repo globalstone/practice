@@ -205,6 +205,62 @@ public class CaptchaRestController {
         }
     }
     
+//    @GetMapping("/verify")
+//    public ResponseEntity<String> verifyCaptcha(@RequestParam("key") String key, @RequestParam("value") String value) {
+//        try {
+//            String code = "1";
+//            String apiURL = "https://naveropenapi.apigw.ntruss.com/captcha/v1/nkey?code=" + code + "&key=" + key + "&value=" + value;
+//            URL url = new URL(apiURL);
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.setRequestMethod("GET");
+//            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
+//            con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
+//            int responseCode = con.getResponseCode();
+//            BufferedReader br;
+//            if (responseCode == 200) {
+//                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//            } else {
+//                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+//            }
+//            String inputLine;
+//            StringBuffer response = new StringBuffer();
+//            while ((inputLine = br.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//            br.close();
+//            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//    @GetMapping("/verify")
+//    public ResponseEntity<String> verifyCaptcha(@RequestParam("key") String key, @RequestParam("value") String value) {
+//        try {
+//            String code = "1";
+//            String apiURL = "https://naveropenapi.apigw.ntruss.com/captcha/v1/nkey?code=" + code + "&key=" + key + "&value=" + value;
+//            URL url = new URL(apiURL);
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.setRequestMethod("GET");
+//            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
+//            con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
+//            int responseCode = con.getResponseCode();
+//            BufferedReader br;
+//            if (responseCode == 200) {
+//                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//            } else {
+//                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+//            }
+//            String inputLine;
+//            StringBuffer response = new StringBuffer();
+//            while ((inputLine = br.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//            br.close();
+//            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     @GetMapping("/verify")
     public ResponseEntity<String> verifyCaptcha(@RequestParam("key") String key, @RequestParam("value") String value) {
         try {
@@ -233,4 +289,5 @@ public class CaptchaRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
