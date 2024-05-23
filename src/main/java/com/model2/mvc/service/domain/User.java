@@ -26,5 +26,5 @@ public class User {
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// JSON ==> Domain Object  Binding을 위해 추가된 부분
 	private String regDateString;
-
+	private String knum;
 }

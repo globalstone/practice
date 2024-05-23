@@ -77,6 +77,10 @@ public class UserServiceImpl implements UserService{
 		return result;
 	}
 
+	public void addUserWithUserInfo(User user) throws Exception {
+	    userDao.addUser(user);
+	}
+	
 	//휴대폰번호 인증문자 보내기
 	public String PhoneNumberCheck(String to) throws Exception {
 		String smsProvider = "https://api.coolsms.co.kr";
@@ -98,6 +102,10 @@ public class UserServiceImpl implements UserService{
 		SingleMessageSentResponse response = messageService.sendOne(request); // 메시지 전송
 
 		return numStr;
+	}
+	
+	public User getUserByKakaoId(String kakaoId) throws Exception {
+		return userDao.getUserByKakaoId(kakaoId);
 	}
 
 }

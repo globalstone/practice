@@ -23,22 +23,20 @@ public class KakaoDaoImpl implements KakaoDao {
     public KakaoDaoImpl() {
     }
 
-    @Override
-    public void kakaoinsert(Kakao kakao) throws Exception {
-        sqlSession.insert("KakaoMapper.kakaoInsert",kakao);
+    public void addKakao(Kakao kakao) throws Exception {
+        sqlSession.insert("KakaoMapper.addKakao",kakao);
     }
 
     public Kakao findkakao(HashMap<String, Object> userInfo) throws Exception {
-        System.out.println("K_name:"+userInfo.get("nickname"));
-        System.out.println("K_mail:"+userInfo.get("email"));
-        System.out.println("K_phone"+userInfo.get("kphone"));
+        System.out.println("K_ID"+userInfo.get("kakaoId"));
         return sqlSession.selectOne("KakaoMapper.findKakao", userInfo);
     }
 
     public Kakao kakaoNumber(Kakao userInfo) throws Exception{
         return sqlSession.selectOne("KakaoMapper.kakaoNumber",userInfo);
     }
-    public Kakao findByEmail(String email){
-        return sqlSession.selectOne("KakaoMapper.findByEmail", email);
+    public Kakao findById(String kakaoId)throws Exception {
+        return sqlSession.selectOne("KakaoMapper.findById", kakaoId);
     }
+    
 }

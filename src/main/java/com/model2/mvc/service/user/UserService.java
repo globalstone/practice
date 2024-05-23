@@ -27,5 +27,9 @@ public interface UserService {
 	public boolean checkDuplication(String userId) throws Exception;
 
 	public String PhoneNumberCheck(String to) throws Exception;
+	
+	public void addUserWithUserInfo(User user) throws Exception;
+	
+	public User getUserByKakaoId(String kakaoId) throws Exception;
 
 }

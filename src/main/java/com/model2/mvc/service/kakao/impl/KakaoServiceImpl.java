@@ -44,7 +44,7 @@ public class KakaoServiceImpl implements KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=cec50764919801119a69066d40036533");  //본인이 발급받은 key
-            sb.append("&redirect_uri=http://localhost:8080/kakao/login&response_type=code");     // 본인이 설정해 놓은 경로
+            sb.append("&redirect_uri=http://localhost:8080/user/kakaoLogin&response_type=code");     // 본인이 설정해 놓은 경로
             sb.append("&code=" + authorize_code);
             System.out.println("authorize_code : " + authorize_code);
             bw.write(sb.toString());
@@ -86,12 +86,13 @@ public class KakaoServiceImpl implements KakaoService {
 
     // 카카오 로그인 정보 저장
     @Override
-    public Kakao getUserInfo (String access_Token) throws Exception {
+    public String getUserInfo (String access_Token) throws Exception {
 
         //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
-        Kakao insert = new Kakao();
+        String kakaoId = null;
+        
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -118,45 +119,15 @@ public class KakaoServiceImpl implements KakaoService {
 
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-            String kakaoId = element.getAsJsonObject().get("id").getAsString();
-            
-            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String email = kakao_account.getAsJsonObject().get("email").getAsString();
-            String kphone = kakao_account.getAsJsonObject().get("phone_number").getAsString();
 
-
-
-            userInfo.put("id", kakaoId);
-            System.out.println("kakaoId ============ " + kakaoId);
-            userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
-            userInfo.put("kphone",kphone);
-            insert.setK_name(nickname);
-            insert.setK_email(email);
-            insert.setK_phone(kphone);
-
+            kakaoId = element.getAsJsonObject().get("id").getAsString();
+            System.out.println("kakaoId : " + kakaoId);
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-//        Kakao result = kakaoDao.findkakao(userInfo);
-//        System.out.println("S:" + result);
-//        if (result == null) {
-//            kakaoDao.kakaoinsert(insert);
-//            return kakaoDao.findkakao(userInfo);
-//        } else {
-//            return result;
-//        }
-        Kakao result = kakaoDao.findByEmail(userInfo.get("email").toString());
-        System.out.println("S:" + result);
-        if (result == null) {
-            // 사용자가 데이터베이스에 존재하지 않는 경우, 사용자 정보를 저장합니다.
-            kakaoDao.kakaoinsert(insert);
-            result = kakaoDao.findByEmail(userInfo.get("email").toString());
-        }
-        return result;
+        return kakaoId; // 예외 발생 시 null 반환
     }
 
         @Override

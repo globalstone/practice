@@ -220,7 +220,7 @@
 					<!-- 카카오 -->
 				</div>
 				<div id="kakao"></div>
-				<a class="p-2" id = "kakao-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=cec50764919801119a69066d40036533&redirect_uri=http://localhost:8080/kakao/login&response_type=code">
+				<a class="p-2" id = "kakao-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=cec50764919801119a69066d40036533&redirect_uri=http://localhost:8080/user/kakaoLogin&response_type=code">
 				</a>
 			  		<p>회원가입 하세요.</p>
 			  		<div id="captchaImageContainer">

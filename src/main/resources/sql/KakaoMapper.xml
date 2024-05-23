@@ -8,17 +8,18 @@
 
     <!-- 정보 찾기 -->
     <select id="findKakao" parameterType="java.util.HashMap" resultType="kakao">
-        select * from kakao_table where k_name=#{k_name, jdbcType=VARCHAR} and k_email=#{k_email, jdbcType=VARCHAR}
+        select * from socialusers where k_id=#{kId}
     </select>
 
-    <!-- 정보 저장 -->
-    <insert id="kakaoInsert" parameterType="kakao">
-        insert into kakao_table
-        values((seq_product_prod_no.NEXTVAL),#{k_name, jdbcType=VARCHAR}, #{k_email, jdbcType=VARCHAR}, #{k_phone, jdbcType=VARCHAR})
-    </insert>
-
-
-    <select id="findByEmail" parameterType="string" resultType="com.model2.mvc.service.domain.Kakao">
-        SELECT * FROM kakao_table WHERE k_email = #{k_email}
+    <select id="findById" parameterType="string" resultType="com.model2.mvc.service.domain.Kakao">
+        SELECT * FROM socialusers WHERE k_id = #{kId}
     </select>
+    
+	<insert id="addKakao" parameterType="com.model2.mvc.service.domain.Kakao">
+    	INSERT INTO socialusers (social_no, social_user_id, k_id)
+    	VALUES (seq_socialusers_social_no.NEXTVAL, #{userId, jdbcType=VARCHAR}, #{kakaoId})
+	</insert>
+
+    
+    
 </mapper>

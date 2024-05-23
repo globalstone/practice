@@ -15,10 +15,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.domain.Kakao;
 import com.model2.mvc.service.domain.User;
+import com.model2.mvc.service.kakao.KakaoService;
 import com.model2.mvc.service.user.UserService;
 
 
@@ -32,6 +35,10 @@ public class UserController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 	//setter Method 구현 않음
+	
+	@Autowired
+	@Qualifier("kakaoServiceImpl")
+	private KakaoService kakaoService;
 
 	@Autowired
 	JavaMailSenderImpl mailSender;
@@ -47,22 +54,26 @@ public class UserController {
 
 
 	@RequestMapping( value="addUser", method=RequestMethod.GET )
-	public String addUser() throws Exception{
-
-		System.out.println("/user/addUser : GET");
-
-		return "redirect:/user/addUserView.jsp";
+	public String addUser(Model model) throws Exception {
+	    System.out.println("/user/addUser : GET");
+	    return "redirect:/user/addUserView.jsp";
 	}
 
-	@RequestMapping( value="addUser", method=RequestMethod.POST )
-	public String addUser( @ModelAttribute("user") User user ) throws Exception {
 
-		System.out.println("/user/addUser : POST");
-		//Business Logic
-		userService.addUser(user);
 
-		return "redirect:/user/loginView.jsp";
+	@RequestMapping(value = "addUser", method = RequestMethod.POST)
+	public String addUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	    System.out.println("/user/addUser : POST");
+
+	    String kakaoId = (String) session.getAttribute("kakaoId");
+	    if (kakaoId != null) {
+	        user.setKnum(kakaoId);
+	    }
+	    userService.addUser(user);
+	    session.removeAttribute("kakaoId"); // 세션에서 카카오 아이디 제거
+	    return "redirect:/user/loginView.jsp";
 	}
+
 
 
 	@RequestMapping( value="getUser", method=RequestMethod.GET )
@@ -76,6 +87,34 @@ public class UserController {
 
 		return "forward:/user/getUser.jsp";
 	}
+
+	@GetMapping(value = "kakaoLogin")
+    public String kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            String access_Token = kakaoService.getAccessToken(code);
+            String kakaoId = kakaoService.getUserInfo(access_Token);
+
+            if (kakaoId == null) {
+                return "error"; // 카카오 사용자 정보가 없으면 에러 처리
+            }
+
+            User user = userService.getUserByKakaoId(kakaoId);
+
+            if (user == null) {
+                // 카카오 사용자 정보가 없으면 회원가입 페이지로 리다이렉트
+                session.setAttribute("kakaoId", kakaoId);
+                redirectAttributes.addAttribute("kakaoId", kakaoId);
+                return "redirect:/user/addUser";
+            }
+
+            // 로그인 성공 처리
+            session.setAttribute("user", user);
+            return "redirect:/index.jsp";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
 
 
 	@RequestMapping( value="updateUser", method=RequestMethod.GET )
@@ -110,7 +149,7 @@ public class UserController {
 	public String login() throws Exception{
 
 		System.out.println("/user/logon : GET");
-
+				
 		return "redirect:/user/loginView.jsp";
 	}
 
@@ -211,6 +250,7 @@ public class UserController {
 		System.out.println("숫자 확인용 : " +checkNum);
 		return checkNum;
 	}
+	
 
 	//문자 인증
 	@PostMapping("/memberPhoneCheck")
