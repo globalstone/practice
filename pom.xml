@@ -23,11 +23,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-messaging</artifactId>
+    		<version>5.3.15</version> <!-- Spring Boot 2.7.7에 맞는 버전 -->
+		</dependency>
 
 		<dependency>
 			<groupId>net.nurigo</groupId>
 			<artifactId>sdk</artifactId>
 			<version>4.3.0</version>
+		</dependency>
+
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-websocket</artifactId>
+    		<version>5.3.13</version> <!-- 현재 버전을 확인하여 업데이트하세요 -->
 		</dependency>
 
 		<dependency>

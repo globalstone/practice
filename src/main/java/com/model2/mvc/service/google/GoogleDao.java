@@ -1,4 +1,4 @@
-package com.model2.mvc.service.google;
-
-public interface GoogleDao {
-}
+//package com.model2.mvc.service.google;
+//
+//public interface GoogleDao {
+//}

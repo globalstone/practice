@@ -47,20 +47,16 @@
 		// 사용할 앱의 JavaScript 키를 설정해 주세요.
 		$(document).ready(function() {
 			Kakao.init('bde4d0b1dd558fcdac6b04e0ba243c20');
-			// 카카오 로그인 버튼을 생성합니다.
 			Kakao.Auth.createLoginButton({
 				container: '#kakao-login-btn',
 				success: function (authObj) {
-					debugger;
-					// alert(JSON.stringify(authObj));
-					console.log(authObj);
-					// window.location.href = "http://192.168.0.17:8080/main.jsp";
 				},
 				fail: function (err) {
 					alert(JSON.stringify(err));
 				}
 			});
 		});
+		
 		$(document).ready(function() {
 		    var captchaKey;
 		    loadCaptcha();
